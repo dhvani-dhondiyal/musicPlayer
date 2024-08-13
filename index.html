@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <style>
+        body[data-theme='dark'] {
+            background-color: #565657;
+            color: #fff;
+            font-family: sans-serif;
+        }
+        body[data-theme='light'] {
+            background-color: #fff;
+            color: #000;
+            font-family: sans-serif;
+        }
+        header h1 {
+            text-align: center;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 1400px;
+        }
+
+        /* Hide the default checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Style the slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+            text-align: right;
+            padding-top: 7px;
+            padding-right: 5px;
+            width: 100px;
+            color:#fff;
+        }
+
+        /* Slider before pseudo-element */
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        border-radius: 50%;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        }
+
+        /* When the checkbox is checked, change the background and slider position */
+        input:checked + .slider {
+        background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+        transform: translateX(26px);
+        }
+        #container{
+            display: flex;
+            column-gap: 50px;
+            padding: 100px;
+        }
+        .card {
+            background-color: #6BB8DE;
+            color: #000;
+            padding: 20px;
+        }
+        body[data-theme="dark"] .card {
+            background:#263238;
+            padding: 20px;
+            border-top: 2px solid gray;
+            border-left: 1px solid gray;
+            box-shadow: inset 0 4px 4px white;
+         }
+        .song-list{
+            border-radius: 10px;
+            width: 25%;
+        }
+        .song-player{
+            border-radius: 10px;
+            width: 50%;
+            border-top: 2px solid blue;
+            border-left: 1px solid blue;            
+            box-shadow:inset 0 4px 4px rgba(0, 0, 0, 0.2);
+        }
+        .song-playlist{
+            display: flex;
+            border-radius: 10px;
+            width: 100%;
+            border-top: 2px solid blue;
+            border-left: 1px solid blue;
+            box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.2);
+            flex-direction: column;
+            height: 600px;
+        }
+        .genre-list{
+            height: 30px;
+            background: #3F708A;
+            border-radius: 5px;
+            border: 0;
+            font-weight:700;
+        }
+        .genre-list option{
+            background: #1890CB;
+            font-weight:700;
+        }
+        ul{
+            padding: 0;
+            width: fit-content;
+            color:white;
+        }
+        ul li{
+            background:#0B81BC;
+            list-style: none;
+            margin: 5px;
+            height: 20px;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        body[data-theme="dark"] ul li {
+            background: #666;
+        }
+        .song-img{
+            display: flex;
+            flex-direction: column;
+            background:#0573AB;
+            padding: 10px;
+            border: 0;
+            border-radius: 10px;
+            border-top: 2px solid blue;
+            border-left: 1px solid blue;            
+            box-shadow:inset 0 4px 4px purple;
+        }
+        body[data-theme="dark"] .song-img {
+            background:#263238;
+            border-top: 2px solid gray;
+            border-left: 1px solid gray;            
+            box-shadow:inset 0 4px 4px white;
+         }
+        .song-img h2, .song-img p{
+            margin: 5px 0 0 0;
+        }
+        .song-button{
+            background: #905BFD;
+            color: white;
+            padding: 10px;
+            border: 0;
+            width: 100px;
+            cursor: pointer;
+        }
+        .song-control, .action-container{
+            display: flex;
+            gap: 20px;
+            padding: 10px;
+            justify-content: center;
+        }
+        .audio-container {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        .playlist-container{
+            display: flex;
+            flex-direction: column;
+            gap:10px
+        }
+        .playlist-create{
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+        }
+        .playlist-create input{
+            border: 2px solid black;
+            height: 30px;
+        }
+        .playlist-create button{
+            background: #905BFD;
+            padding: 10px;
+            border: 0;
+            font-weight: 500;
+            width: 150px;
+        }
+        li:hover{
+            background: none;
+        }
+    </style>
+   
+    
+</head>
+<body data-theme="light">
+    <header>
+        <h1>Music Player</h1>
+        <label class="switch">
+            <input type="checkbox" id="toggleSwitch" onchange="handleToggleChange()">
+            <span id="slider-text" class="slider">Dark</span>
+        </label>
+    </header>
+    <div id="container">
+        <div class="card song-list" id="all-songs-div">
+           
+            <label for="genreFilter">Filter by genre:</label>
+            <select id="genreFilter" class="genre-list">
+                <option value="">All Genres</option>
+                <option value="Hip-Hop">Hip-Hop</option>
+                <option value="Classical">Classical</option>
+                <option value="Pop">Pop</option>
+                <option value="Rock">Rock </option>
+            </select>
+            <h2>All Songs</h2>
+            
+            <ul id="songsList"></ul>
+        </div>
+        <div class="card song-player" id="card-div">
+            <div class="song-img">
+                <img id="songImage" src="./images/levitating.jpeg" alt="Song pic" />
+                <h2 id="songName">levitating</h2>
+                <p id="artistName">Dua Lipa</p>
+            </div>
+          
+            <div class="audio-container">
+                <audio controls id="song_audio">
+                    <source src="your-audio-file.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div class="song-control">
+                <button class="song-button" id="prevBtn" onclick="playPreviousSong()"><=</button>
+                <button class="song-button" id="nextBtn" onclick="playNextSong()">=></button>
+            </div>
+            <div class="action-container">
+                <button class="song-button" id="addToPlaylistBtn" onclick="addToPlaylist()">Add to Playlist</button>
+            </div>
+        </div>
+        <div class="playlist-container">
+            <div class="playlist-create">
+                <input type="text" id="playlist_name" placeholder="Enter Playlist Name">
+                <button id="createPlaylistBtn" onclick="createPlaylist()">Create Playlist</button>
+            </div>
+            <div class="card song-playlist" id="playlist-div">
+                <h2>Current Playlist</h2>
+                
+                <ul id="cur_playlistsList"></ul>
+                <ul id="playlistSongsDiv"></ul>
+            
+                <h2>All Playlist</h2>
+                
+                <ul id="playlistsList"></ul>
+                <!-- <div id="playlistSongsDiv"></div> -->
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./script.js"></script>
+    <script type="text/javascript">
+        document.getElementById('genreFilter').addEventListener('change', showSongs);        
+    </script>
+</body>
+</html>
